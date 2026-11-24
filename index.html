@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GD Drone – Légifotózás és légivideózás</title>
+  <meta name="description" content="GD Drone – Professzionális légifotózás és légivideózás épületekhez, építkezésekhez és egyéb projektekhez. 3 kedvező csomag.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #0ea5e9;
+      --accent-dark: #0284c7;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #ffffff;
+      --bg-alt: #f8fafc;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+
+    header.scrolled {
+      box-shadow: var(--shadow);
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--primary);
+    }
+
+    .logo-link img {
+      height: 42px;
+      width: auto;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .nav-cta {
+      background: var(--primary);
+      color: white !important;
+      padding: 0.55rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .mobile-menu-btn span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--primary);
+      margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 8.5rem 1.5rem 5rem;
+      background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-logo {
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto 2rem;
+      display: block;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-light);
+      max-width: 560px;
+      margin: 0 auto 2.25rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem 1.75rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Services */
+    .services {
+      background: var(--bg-alt);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .service-card {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform 0.25s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .service-icon {
+      width: 56px;
+      height: 56px;
+      background: #e0f2fe;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 1.6rem;
+    }
+
+    .service-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      color: var(--primary);
+    }
+
+    .service-card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    /* Packages */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.75rem;
+      align-items: stretch;
+    }
+
+    .package-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.25rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .package-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+    }
+
+    .package-card.featured {
+      border: 2px solid var(--accent);
+      box-shadow: 0 8px 30px rgba(14, 165, 233, 0.15);
+    }
+
+    .package-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .package-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .package-price {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .package-price span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    .package-extra {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .package-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      flex-grow: 1;
+    }
+
+    .package-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.95rem;
+    }
+
+    .package-features li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .package-card .btn {
+      width: 100%;
+    }
+
+    .package-note {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 1rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* About */
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about-text h2 {
+      font-size: clamp(1.75rem, 4vw, 2.1rem);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .about-text p {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .about-list {
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    .about-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+      font-weight: 500;
+    }
+
+    .about-list li span {
+      width: 28px;
+      height: 28px;
+      background: #e0f2fe;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .about-visual {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .about-visual img {
+      max-width: 200px;
+      margin-bottom: 1.5rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .about-visual p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    /* Contact */
+    .contact {
+      background: var(--bg-alt);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .contact-info h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--primary);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-item .icon {
+      width: 44px;
+      height: 44px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .contact-item strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-item p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    .contact-form {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-brand {
+      max-width: 280px;
+    }
+
+    .footer-brand img {
+      height: 48px;
+      margin-bottom: 1rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-brand p {
+      opacity: 0.75;
+      font-size: 0.95rem;
+    }
+
+    .footer-links h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      text-align: center;
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      nav.open ul {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        gap: 1rem;
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        padding-top: 7rem;
+      }
+
+      .about-content,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-visual {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="nav-container">
+      <a href="#" class="logo-link">
+        <img src="gd-drone-logo.jpg" alt="GD Drone logo">
+        <span class="logo-text">GD Drone</span>
+      </a>
+      <nav id="nav">
+        <ul>
+          <li><a href="#szolgaltatasok">Szolgáltatások</a></li>
+          <li><a href="#csomagok">Csomagok</a></li>
+          <li><a href="#rolunk">Rólunk</a></li>
+          <li><a href="#kapcsolat" class="nav-cta">Ajánlatkérés</a></li>
+        </ul>
+        <button class="mobile-menu-btn" id="menuBtn" aria-label="Menü">
+          <span></span><span></span><span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <img src="gd-drone-logo.jpg" alt="GD Drone" class="hero-logo">
+      <h1>Professzionális légifotózás<br>és légivideózás</h1>
+      <p>Épületek, építkezések és különleges projektek dokumentálása nagyfelbontású légifelvételekkel. Gyors, precíz és megbízható szolgáltatás.</p>
+      <div class="hero-buttons">
+        <a href="#csomagok" class="btn btn-primary">Csomagok megtekintése</a>
+        <a href="#kapcsolat" class="btn btn-secondary">Kapcsolatfelvétel</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services" id="szolgaltatasok">
+    <div class="container">
+      <div class="section-header">
+        <h2>Szolgáltatásaink</h2>
+        <p>A GD Drone professzionális drónfelvételekkel segíti a projektek dokumentálását és bemutatását.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">🏗️</div>
+          <h3>Épületek</h3>
+          <p>Ingatlanok, társasházak és ipari létesítmények látványos légifelvételei marketinghez és dokumentációhoz.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🚧</div>
+          <h3>Építkezések</h3>
+          <p>Folyamatkövetés, állapotfelmérés és előrehaladás dokumentálása a projekt teljes időtartama alatt.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📸</div>
+          <h3>Egyéb fotózás</h3>
+          <p>Rendezvények, telkek, mezőgazdasági területek és különleges projektek kreatív légifelvételei.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section id="csomagok">
+    <div class="container">
+      <div class="section-header">
+        <h2>Csomagjaink</h2>
+        <p>Válassza ki az igényeinek leginkább megfelelő csomagot. Minden csomag nagyfelbontású felvételeket tartalmaz.</p>
+      </div>
+      <div class="packages-grid">
+        <!-- Package 1 -->
+        <div class="package-card">
+          <div class="package-name">1-es csomag</div>
+          <div class="package-price">20.000 <span>Ft</span></div>
+          <div class="package-extra">+ 100 Ft/km kiszállási díj</div>
+          <ul class="package-features">
+            <li>15 db nagyfelbontású légi fotó</li>
+            <li>Professzionális utómunka</li>
+            <li>Digitális átadás</li>
+            <li>Gyors határidő</li>
+          </ul>
+          <a href="#kapcsolat" class="btn btn-secondary">Ajánlatot kérek</a>
+        </div>
+
+        <!-- Package 2 -->
+        <div class="package-card featured">
+          <div class="package-badge">Népszerű</div>
+          <div class="package-name">2-es csomag</div>
+          <div class="package-price">28.000 <span>Ft</span></div>
+          <div class="package-extra">+ 100 Ft/km kiszállási díj</div>
+          <ul class="package-features">
+            <li>15 db nagyfelbontású légi fotó</li>
+            <li>5 db nagyfelbontású légi videó</li>
+            <li>Professzionális utómunka</li>
+            <li>Digitális átadás</li>
+            <li>Gyors határidő</li>
+          </ul>
+          <a href="#kapcsolat" class="btn btn-primary">Ajánlatot kérek</a>
+        </div>
+
+        <!-- Package 3 -->
+        <div class="package-card">
+          <div class="package-name">3-as csomag</div>
+          <div class="package-price">35.000 <span>Ft</span></div>
+          <div class="package-extra">Nincs kiszállási díj</div>
+          <ul class="package-features">
+            <li>20 db nagyfelbontású légi fotó</li>
+            <li>10 db nagyfelbontású légi videó</li>
+            <li>Professzionális utómunka</li>
+            <li>Digitális átadás</li>
+            <li>Opcionális újrafotózás (csak kiszállási díj)</li>
+          </ul>
+          <a href="#kapcsolat" class="btn btn-secondary">Ajánlatot kérek</a>
+          <p class="package-note">Újrafotózás esetén csak a 100 Ft/km kiszállási díjat számoljuk fel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="rolunk">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>Miért a GD Drone?</h2>
+          <p>A GD Drone a professzionális légifelvételek specialistája. Épületek, építkezések és egyéb projektek dokumentálásában segítünk precíz, nagyfelbontású fotókkal és videókkal.</p>
+          <p>Modern dróntechnológiával dolgozunk, így a legjobb szögekből, a legjobb minőségben készítjük el a felvételeket.</p>
+          <ul class="about-list">
+            <li><span>✓</span> Nagyfelbontású, professzionális minőség</li>
+            <li><span>✓</span> Gyors és megbízható munkavégzés</li>
+            <li><span>✓</span> Átlátható, kedvező árképzés</li>
+            <li><span>✓</span> Rugalmas kiszállás</li>
+          </ul>
+        </div>
+        <div class="about-visual">
+          <img src="gd-drone-logo.jpg" alt="GD Drone">
+          <p>Épületek • Építkezések<br>és egyéb fotózási projektek</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="kapcsolat">
+    <div class="container">
+      <div class="section-header">
+        <h2>Kapcsolatfelvétel</h2>
+        <p>Kérjen személyre szabott ajánlatot, vagy érdeklődjön a szolgáltatásainkkal kapcsolatban.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Elérhetőségek</h3>
+          <div class="contact-item">
+            <div class="icon">📧</div>
+            <div>
+              <strong>E-mail</strong>
+              <p>gardaden@gmail.com</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon">📱</div>
+            <div>
+              <strong>Telefon</strong>
+              <p>+36 303555494</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon">📍</div>
+            <div>
+              <strong>Kiszállás</strong>
+              <p>100 Ft/km kiszállási díjjal</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon">⏱️</div>
+            <div>
+              <strong>Válaszidő</strong>
+              <p>Általában 24 órán belül</p>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form">
+          <form id="contactForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+              <label for="name">Név *</label>
+              <input type="text" id="name" name="name" required placeholder="Az Ön neve">
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" required placeholder="pelda@email.hu">
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefon</label>
+              <input type="tel" id="phone" name="phone" placeholder="+36 ...">
+            </div>
+            <div class="form-group">
+              <label for="package">Érdekelt csomag</label>
+              <select id="package" name="package">
+                <option value="">Válasszon csomagot...</option>
+                <option value="1">1-es csomag – 20.000 Ft</option>
+                <option value="2">2-es csomag – 28.000 Ft</option>
+                <option value="3">3-as csomag – 35.000 Ft</option>
+                <option value="egyedi">Egyedi ajánlat</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Üzenet *</label>
+              <textarea id="message" name="message" required placeholder="Írja le a projektjét, a helyszínt és az igényeit..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Üzenet küldése</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="gd-drone-logo.jpg" alt="GD Drone">
+        <p>Professzionális légifotózás és légivideózás épületekhez, építkezésekhez és egyéb projektekhez.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigáció</h4>
+        <ul>
+          <li><a href="#szolgaltatasok">Szolgáltatások</a></li>
+          <li><a href="#csomagok">Csomagok</a></li>
+          <li><a href="#rolunk">Rólunk</a></li>
+          <li><a href="#kapcsolat">Kapcsolat</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Csomagok</h4>
+        <ul>
+          <li><a href="#csomagok">1-es csomag</a></li>
+          <li><a href="#csomagok">2-es csomag</a></li>
+          <li><a href="#csomagok">3-as csomag</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 GD Drone. Minden jog fenntartva.
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const nav = document.getElementById('nav');
+    menuBtn.addEventListener('click', () => {
+      nav.classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => nav.classList.remove('open'));
+    });
+
+    // Form handling
+    function handleSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      alert('Köszönjük, ' + name + '!\n\nAz üzenetét megkaptuk. Hamarosan felvesszük Önnel a kapcsolatot.\n\n(Ez egy demó űrlap – a valós weboldalon e-mailben érkezik meg az üzenet.)');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
